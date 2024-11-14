@@ -1,38 +1,28 @@
-# For documentation on this file, see:
-# https://github.com/riggraz/no-style-please#customize-the-menu
-
 entries:
-  - title: info
+  - title: about me
+    url: false
     entries:
-      - title: a (nearly) no-CSS, fast, minimalist Jekyll theme.
-      - title: github repo
-        url: https://github.com/riggraz/no-style-please
-      - title: "used by <a href='https://riggraz.dev'>riggraz.dev</a> and <a href='https://github.com/riggraz/no-style-please/network/dependents'>many others</a>"
-
-  - title: all posts
-    post_list:
-      limit: 5
-      show_more: true
-      show_more_text: See archive...
-      show_more_url: archive.html
-
-  - title: posts by category
-    post_list:
-      category: example2
-      show_more: true
-      show_more_text: See more posts...
-      show_more_url: example2-archive.html
-
-  - title: rss
-    url: feed.xml
-  
-  - title: another list
+      - title: "linkedin"
+        url: "https://www.linkedin.com/in/jason-d-lang/"
+      - title: "github"
+        url: "https://github.com/jdenalil"
+  - title: "posts"
+    url: false
+    post_list: true
+  - title: "things i love"
+    url: false
     entries:
-      - title: with subitems
+      - title: "languages"
+        url: false
         entries:
-          - title: with subsubitems
-          - title: example page
-            url: about
-  - title: PRO TIP
-    entries:
-      - title: to edit this menu, edit _data/menu.yml file
+        - title: "rust"
+          url: "https://doc.rust-lang.org/book/"
+        - title: "python"
+          url: "https://www.python.org"
+      - title: "employeees"
+        url: false
+        entries:
+        - title: "claude"
+          url: "https://claude.ai"
+        - title: "julius"
+          url: "https://julius.ai"
