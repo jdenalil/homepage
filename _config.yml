@@ -3,7 +3,7 @@ description: !
 
 url: https://jdenalil.github.io
 
-theme: no-style-please
+remote_theme: riggaz/no-style-please
 
 theme_config:
   appearance: "auto"
