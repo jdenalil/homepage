@@ -7,7 +7,7 @@ entries:
       - title: "github"
         url: "https://github.com/jdenalil"
       - title: "instagram"
-        url: "https://www.instagram.com/jasondlang/""
+        url: "https://www.instagram.com/jasondlang/"
   - title: "posts"
     url: false
     post_list: true
