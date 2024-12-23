@@ -6,23 +6,8 @@ entries:
         url: "https://www.linkedin.com/in/jason-d-lang/"
       - title: "github"
         url: "https://github.com/jdenalil"
+      - title: "instagram"
+        url: "https://www.instagram.com/jasondlang/""
   - title: "posts"
     url: false
     post_list: true
-  - title: "things i love"
-    url: false
-    entries:
-      - title: "languages"
-        url: false
-        entries:
-        - title: "rust"
-          url: "https://doc.rust-lang.org/book/"
-        - title: "python"
-          url: "https://www.python.org"
-      - title: "employeees"
-        url: false
-        entries:
-        - title: "claude"
-          url: "https://claude.ai"
-        - title: "julius"
-          url: "https://julius.ai"
