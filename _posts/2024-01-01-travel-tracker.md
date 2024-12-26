@@ -1,5 +1,7 @@
 ---
 layout: post
+custom_js:
+  - mouse_coords
 ---
 1. 🇺🇸 US
 2. 🇨🇱 Chile (June 2015)
