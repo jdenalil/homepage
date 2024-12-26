@@ -6,11 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
   canvas.style.position = 'fixed';
   canvas.style.top = '0';
   canvas.style.left = '0';
-  canvas.style.width = '100%';
-  canvas.style.height = '100%';
+  canvas.style.width = '100vw';
+  canvas.style.height = '100vh';
   canvas.style.zIndex = '-1';
   canvas.style.pointerEvents = 'none';
-  document.body.appendChild(canvas);
+  canvas.style.opacity = '1';
+  document.body.insertBefore(canvas, document.body.firstChild);
 
   // Setup canvas
   const ctx = canvas.getContext('2d');
