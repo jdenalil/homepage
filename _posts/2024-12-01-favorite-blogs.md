@@ -2,6 +2,7 @@
 layout: post
 custom_js:
   - mouse_coords
+  - mesh_grid
 ---
 
 ### General:
