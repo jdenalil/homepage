@@ -1,81 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
-  if (!document.querySelector('article')) return; // Only run on post pages
-  
-  // Create canvas element
-  const canvas = document.createElement('canvas');
-  canvas.style.position = 'fixed';
-  canvas.style.top = '0';
-  canvas.style.left = '0';
-  canvas.style.width = '100vw';
-  canvas.style.height = '100vh';
-  canvas.style.zIndex = '-1';
-  canvas.style.pointerEvents = 'none';
-  canvas.style.opacity = '1';
-  document.body.insertBefore(canvas, document.body.firstChild);
+  if (!document.querySelector('article')) return;
 
-  // Setup canvas
-  const ctx = canvas.getContext('2d');
-  let width, height;
-  let mouseX = 0, mouseY = 0;
-  
-  // Grid properties
-  const gridSize = 30;
-  const lineWidth = 0.5;
-  const baseAlpha = 0.15;
-  const fadeRadius = 200; // Radius of transparency around mouse
+  // Create mesh container
+  const mesh = document.createElement('div');
+  mesh.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background-image: 
+      linear-gradient(#00000015 1px, transparent 1px),
+      linear-gradient(90deg, #00000015 1px, transparent 1px);
+    background-size: 40px 40px;
+  `;
+  document.body.insertBefore(mesh, document.body.firstChild);
 
-  function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  }
+  // Create spotlight effect
+  const spotlight = document.createElement('div');
+  spotlight.style.cssText = `
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    pointer-events: none;
+    background: radial-gradient(circle closest-side, #ffffff 0%, transparent 100%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  `;
+  document.body.appendChild(spotlight);
 
-  function drawGrid() {
-    ctx.clearRect(0, 0, width, height);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = lineWidth;
-
-    // Draw vertical lines
-    for (let x = 0; x <= width; x += gridSize) {
-      ctx.beginPath();
-      for (let y = 0; y <= height; y += 2) {
-        const distance = Math.sqrt(Math.pow(x - mouseX, 2) + Math.pow(y - mouseY, 2));
-        const alpha = Math.max(0, Math.min(baseAlpha, (distance / fadeRadius) * baseAlpha));
-        ctx.globalAlpha = alpha;
-        
-        ctx.moveTo(x, y);
-        ctx.lineTo(x, y + 1);
-      }
-      ctx.stroke();
-    }
-
-    // Draw horizontal lines
-    for (let y = 0; y <= height; y += gridSize) {
-      ctx.beginPath();
-      for (let x = 0; x <= width; x += 2) {
-        const distance = Math.sqrt(Math.pow(x - mouseX, 2) + Math.pow(y - mouseY, 2));
-        const alpha = Math.max(0, Math.min(baseAlpha, (distance / fadeRadius) * baseAlpha));
-        ctx.globalAlpha = alpha;
-        
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + 1, y);
-      }
-      ctx.stroke();
-    }
-  }
-
-  // Event listeners
-  window.addEventListener('resize', () => {
-    resize();
-    drawGrid();
-  });
-
+  // Update spotlight position
   document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-    drawGrid();
+    spotlight.style.left = e.clientX + 'px';
+    spotlight.style.top = e.clientY + 'px';
   });
-
-  // Initial setup
-  resize();
-  drawGrid();
 });
