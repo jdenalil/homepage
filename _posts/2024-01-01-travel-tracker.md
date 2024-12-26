@@ -3,7 +3,8 @@ layout: post
 custom_js:
   - mouse_coords
 ---
-1. 🇺🇸 US
+Goal: travel to 100 countries before the age of 30. 
+1. 🇺🇸 USA (🏠)
 2. 🇨🇱 Chile (June 2015)
 3. 🇦🇷 Argentina (June 2015)
 4. 🇮🇪 Ireland (December 2022)
