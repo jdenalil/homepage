@@ -26,20 +26,21 @@ document.addEventListener('DOMContentLoaded', () => {
       linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0;
+    opacity: 0.1;
   `;
   leftContainer.appendChild(leftGrid);
 
-  // Create spotlight mask for left side
+  // Create spotlight for left side
   const leftSpotlight = document.createElement('div');
   leftSpotlight.style.cssText = `
     position: absolute;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle closest-side, rgba(255, 255, 255, 1) 0%, transparent 100%);
+    background: radial-gradient(circle closest-side, rgba(0, 0, 0, 0.1) 0%, transparent 100%);
     transform: translate(-50%, -50%);
     pointer-events: none;
-    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 2s ease;
   `;
   leftContainer.appendChild(leftSpotlight);
 
@@ -61,64 +62,59 @@ document.addEventListener('DOMContentLoaded', () => {
   rightGrid.style.cssText = `
     position: absolute;
     top: 0;
-    left: 0;
+    right: 0;
     width: 100%;
     height: 100%;
     background-image: 
       linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0;
+    opacity: 0.1;
   `;
   rightContainer.appendChild(rightGrid);
 
-  // Create spotlight mask for right side
+  // Create spotlight for right side
   const rightSpotlight = document.createElement('div');
   rightSpotlight.style.cssText = `
     position: absolute;
     width: 300px;
     height: 300px;
-    background: radial-gradient(circle closest-side, rgba(255, 255, 255, 1) 0%, transparent 100%);
+    background: radial-gradient(circle closest-side, rgba(0, 0, 0, 0.1) 0%, transparent 100%);
     transform: translate(-50%, -50%);
     pointer-events: none;
-    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 2s ease;
   `;
   rightContainer.appendChild(rightSpotlight);
 
-  // Update spotlight positions and grid opacity
+  // Update spotlight positions
   document.addEventListener('mousemove', (e) => {
     const contentWidth = 640;
     const sideWidth = (window.innerWidth - contentWidth) / 2;
     
-    // Only show grids when window is wide enough
+    // Only show spotlights when window is wide enough
     if (window.innerWidth <= 800) {
-      leftGrid.style.transition = 'opacity 0s';
-      rightGrid.style.transition = 'opacity 0s';
-      leftGrid.style.opacity = '0';
-      rightGrid.style.opacity = '0';
+      leftSpotlight.style.opacity = '0';
+      rightSpotlight.style.opacity = '0';
       return;
     }
 
     // Left side
     if (e.clientX <= sideWidth) {
-      leftGrid.style.transition = 'opacity 2s ease';
-      leftGrid.style.opacity = '1';
+      leftSpotlight.style.opacity = '1';
       leftSpotlight.style.left = e.clientX + 'px';
       leftSpotlight.style.top = e.clientY + 'px';
     } else {
-      leftGrid.style.transition = 'opacity 2s ease';
-      leftGrid.style.opacity = '0';
+      leftSpotlight.style.opacity = '0';
     }
 
     // Right side
     if (e.clientX >= window.innerWidth - sideWidth) {
-      rightGrid.style.transition = 'opacity 2s ease';
-      rightGrid.style.opacity = '1';
+      rightSpotlight.style.opacity = '1';
       rightSpotlight.style.left = (e.clientX - (window.innerWidth - sideWidth)) + 'px';
       rightSpotlight.style.top = e.clientY + 'px';
     } else {
-      rightGrid.style.transition = 'opacity 2s ease';
-      rightGrid.style.opacity = '0';
+      rightSpotlight.style.opacity = '0';
     }
   });
 
