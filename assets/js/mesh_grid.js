@@ -1,55 +1,46 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Mesh grid script loaded');
-  
-  const article = document.querySelector('article');
-  console.log('Article element found:', article);
-  
-  if (!article) {
-    console.log('No article element found, exiting');
-    return;
-  }
+  if (!document.querySelector('article')) return;
 
-  // Create mesh container with a visible background color first for debugging
-  const mesh = document.createElement('div');
-  mesh.id = 'debug-mesh-grid';
-  mesh.style.cssText = `
+  // Create left grid
+  const leftGrid = document.createElement('div');
+  leftGrid.style.cssText = `
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: calc((100% - 640px) / 2);
     height: 100%;
     pointer-events: none;
-    z-index: 1;
-    background-color: rgba(255, 0, 0, 0.1);
     background-image: 
-      linear-gradient(#000000 1px, transparent 1px),
-      linear-gradient(90deg, #000000 1px, transparent 1px);
+      linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 40px 40px;
   `;
-  
-  document.body.insertBefore(mesh, document.body.firstChild);
-  console.log('Mesh element created and inserted:', mesh);
-  console.log('Mesh element computed style:', window.getComputedStyle(mesh));
+  document.body.appendChild(leftGrid);
 
-  // Create spotlight effect
-  const spotlight = document.createElement('div');
-  spotlight.id = 'debug-spotlight';
-  spotlight.style.cssText = `
+  // Create right grid
+  const rightGrid = document.createElement('div');
+  rightGrid.style.cssText = `
     position: fixed;
-    width: 300px;
-    height: 300px;
+    top: 0;
+    right: 0;
+    width: calc((100% - 640px) / 2);
+    height: 100%;
     pointer-events: none;
-    background: radial-gradient(circle closest-side, #ffffff 0%, transparent 100%);
-    transform: translate(-50%, -50%);
-    z-index: 2;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 40px 40px;
   `;
-  document.body.appendChild(spotlight);
-  console.log('Spotlight element created and inserted:', spotlight);
+  document.body.appendChild(rightGrid);
 
-  // Update spotlight position
-  document.addEventListener('mousemove', (e) => {
-    spotlight.style.left = e.clientX + 'px';
-    spotlight.style.top = e.clientY + 'px';
-    console.log('Mouse moved:', e.clientX, e.clientY);
-  });
+  // Hide grids on narrow screens
+  const updateGridVisibility = () => {
+    const show = window.innerWidth > 800; // Only show when there's room for side columns
+    leftGrid.style.display = show ? 'block' : 'none';
+    rightGrid.style.display = show ? 'block' : 'none';
+  };
+
+  // Initial check and listen for window resizes
+  updateGridVisibility();
+  window.addEventListener('resize', updateGridVisibility);
 });
