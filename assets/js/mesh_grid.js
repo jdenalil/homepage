@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
       background-size: 40px 40px;
-      mask-image: url(#);
-      -webkit-mask-image: url(#);
     `;
 
     // Create canvas for mask
@@ -67,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const rightCtx = initCanvas(right.canvas);
 
   // Function to draw and update the fade effect
-  const fadeAmount = 0.98;
+  const fadeAmount = 2; // How much to decrease alpha per frame
   const spotlightSize = 150;
   let animationFrame;
 
@@ -75,10 +73,29 @@ document.addEventListener('DOMContentLoaded', () => {
     [leftCtx, rightCtx].forEach(ctx => {
       const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
       const data = imageData.data;
+      let hasVisiblePixels = false;
+      
       for (let i = 3; i < data.length; i += 4) {
-        data[i] = Math.max(0, data[i] - 1);
+        if (data[i] > 0) {
+          data[i] = Math.max(0, data[i] - fadeAmount);
+          hasVisiblePixels = true;
+        }
       }
+      
       ctx.putImageData(imageData, 0, 0);
+      
+      // Update grid mask only if there are visible pixels
+      const canvas = ctx === leftCtx ? left.canvas : right.canvas;
+      const grid = ctx === leftCtx ? left.grid : right.grid;
+      
+      if (hasVisiblePixels) {
+        const dataUrl = canvas.toDataURL();
+        grid.style.webkitMaskImage = `url(${dataUrl})`;
+        grid.style.maskImage = `url(${dataUrl})`;
+      } else {
+        grid.style.webkitMaskImage = 'none';
+        grid.style.maskImage = 'none';
+      }
     });
 
     animationFrame = requestAnimationFrame(updateFade);
@@ -101,31 +118,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Left side
     if (e.clientX <= sideWidth) {
       const rect = left.canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
+      const x = e.clientX;
       const y = e.clientY - rect.top;
       
-      leftCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      leftCtx.fillStyle = 'rgba(255, 255, 255, 255)';
       leftCtx.beginPath();
       leftCtx.arc(x, y, spotlightSize / 2, 0, Math.PI * 2);
       leftCtx.fill();
-      
-      left.grid.style.webkitMaskImage = `url(${left.canvas.toDataURL()})`;
-      left.grid.style.maskImage = `url(${left.canvas.toDataURL()})`;
     }
 
     // Right side
     if (e.clientX >= window.innerWidth - sideWidth) {
       const rect = right.canvas.getBoundingClientRect();
-      const x = e.clientX - (window.innerWidth - sideWidth) - rect.left;
+      const x = e.clientX - (window.innerWidth - sideWidth);
       const y = e.clientY - rect.top;
       
-      rightCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      rightCtx.fillStyle = 'rgba(255, 255, 255, 255)';
       rightCtx.beginPath();
       rightCtx.arc(x, y, spotlightSize / 2, 0, Math.PI * 2);
       rightCtx.fill();
-      
-      right.grid.style.webkitMaskImage = `url(${right.canvas.toDataURL()})`;
-      right.grid.style.maskImage = `url(${right.canvas.toDataURL()})`;
     }
   });
 
@@ -134,6 +145,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const show = window.innerWidth > 800;
     left.container.style.display = show ? 'block' : 'none';
     right.container.style.display = show ? 'block' : 'none';
+    
+    // Reset canvases when showing
+    if (show) {
+      leftCtx.clearRect(0, 0, leftCtx.canvas.width, leftCtx.canvas.height);
+      rightCtx.clearRect(0, 0, rightCtx.canvas.width, rightCtx.canvas.height);
+    }
   };
 
   updateVisibility();
