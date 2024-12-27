@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
       background-size: 40px 40px;
-      opacity: 0;
-      transition: opacity 0.1s;
     `;
 
     // Create canvas for mask
@@ -67,28 +65,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const rightCtx = initCanvas(right.canvas);
 
   // Function to draw and update the fade effect
-  const fadeAmount = 2; // How much to decrease alpha per frame
+  const fadeAmount = 2;
   const spotlightSize = 150;
   let animationFrame;
+  let leftNeedsMaskUpdate = false;
+  let rightNeedsMaskUpdate = false;
 
   const updateFade = () => {
-    [leftCtx, rightCtx].forEach(ctx => {
+    [leftCtx, rightCtx].forEach((ctx, index) => {
       const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
       const data = imageData.data;
-      let maxAlpha = 0;
+      let hasVisiblePixels = false;
       
       for (let i = 3; i < data.length; i += 4) {
         if (data[i] > 0) {
           data[i] = Math.max(0, data[i] - fadeAmount);
-          maxAlpha = Math.max(maxAlpha, data[i]);
+          hasVisiblePixels = true;
         }
       }
       
       ctx.putImageData(imageData, 0, 0);
-      
-      // Update grid opacity based on max alpha
-      const grid = ctx === leftCtx ? left.grid : right.grid;
-      grid.style.opacity = maxAlpha / 255;
+
+      // Only update mask if we drew something new
+      const needsUpdate = index === 0 ? leftNeedsMaskUpdate : rightNeedsMaskUpdate;
+      if (needsUpdate && hasVisiblePixels) {
+        const grid = index === 0 ? left.grid : right.grid;
+        const canvas = index === 0 ? left.canvas : right.canvas;
+        const dataUrl = canvas.toDataURL();
+        grid.style.webkitMaskImage = `url(${dataUrl})`;
+        grid.style.maskImage = `url(${dataUrl})`;
+        if (index === 0) {
+          leftNeedsMaskUpdate = false;
+        } else {
+          rightNeedsMaskUpdate = false;
+        }
+      }
     });
 
     animationFrame = requestAnimationFrame(updateFade);
@@ -118,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
       leftCtx.beginPath();
       leftCtx.arc(x, y, spotlightSize / 2, 0, Math.PI * 2);
       leftCtx.fill();
+      leftNeedsMaskUpdate = true;
     }
 
     // Right side
@@ -130,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
       rightCtx.beginPath();
       rightCtx.arc(x, y, spotlightSize / 2, 0, Math.PI * 2);
       rightCtx.fill();
+      rightNeedsMaskUpdate = true;
     }
   });
 
@@ -143,8 +156,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (show) {
       leftCtx.clearRect(0, 0, leftCtx.canvas.width, leftCtx.canvas.height);
       rightCtx.clearRect(0, 0, rightCtx.canvas.width, rightCtx.canvas.height);
-      left.grid.style.opacity = 0;
-      right.grid.style.opacity = 0;
+      left.grid.style.webkitMaskImage = 'none';
+      left.grid.style.maskImage = 'none';
+      right.grid.style.webkitMaskImage = 'none';
+      right.grid.style.maskImage = 'none';
     }
   };
 
