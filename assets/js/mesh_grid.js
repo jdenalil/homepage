@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
         linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
       background-size: 40px 40px;
+      opacity: 0;
+      transition: opacity 0.1s;
     `;
 
     // Create canvas for mask
@@ -73,29 +75,20 @@ document.addEventListener('DOMContentLoaded', () => {
     [leftCtx, rightCtx].forEach(ctx => {
       const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
       const data = imageData.data;
-      let hasVisiblePixels = false;
+      let maxAlpha = 0;
       
       for (let i = 3; i < data.length; i += 4) {
         if (data[i] > 0) {
           data[i] = Math.max(0, data[i] - fadeAmount);
-          hasVisiblePixels = true;
+          maxAlpha = Math.max(maxAlpha, data[i]);
         }
       }
       
       ctx.putImageData(imageData, 0, 0);
       
-      // Update grid mask only if there are visible pixels
-      const canvas = ctx === leftCtx ? left.canvas : right.canvas;
+      // Update grid opacity based on max alpha
       const grid = ctx === leftCtx ? left.grid : right.grid;
-      
-      if (hasVisiblePixels) {
-        const dataUrl = canvas.toDataURL();
-        grid.style.webkitMaskImage = `url(${dataUrl})`;
-        grid.style.maskImage = `url(${dataUrl})`;
-      } else {
-        grid.style.webkitMaskImage = 'none';
-        grid.style.maskImage = 'none';
-      }
+      grid.style.opacity = maxAlpha / 255;
     });
 
     animationFrame = requestAnimationFrame(updateFade);
@@ -150,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (show) {
       leftCtx.clearRect(0, 0, leftCtx.canvas.width, leftCtx.canvas.height);
       rightCtx.clearRect(0, 0, rightCtx.canvas.width, rightCtx.canvas.height);
+      left.grid.style.opacity = 0;
+      right.grid.style.opacity = 0;
     }
   };
 
