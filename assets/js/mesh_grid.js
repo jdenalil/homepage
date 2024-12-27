@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
         linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
       background-size: 40px 40px;
+      mask-image: url(#);
+      -webkit-mask-image: url(#);
     `;
 
     // Create canvas for mask
@@ -36,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
       left: 0;
       width: 100%;
       height: 100%;
+      opacity: 0;
     `;
 
     container.appendChild(grid);
@@ -52,36 +55,31 @@ document.addEventListener('DOMContentLoaded', () => {
   const initCanvas = (canvas) => {
     const updateSize = () => {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
     };
     updateSize();
     window.addEventListener('resize', updateSize);
-    return canvas.getContext('2d');
+    return canvas.getContext('2d', { willReadFrequently: true });
   };
 
   const leftCtx = initCanvas(left.canvas);
   const rightCtx = initCanvas(right.canvas);
 
   // Function to draw and update the fade effect
-  const fadeAmount = 0.98; // How quickly the effect fades (0-1)
+  const fadeAmount = 0.98;
   const spotlightSize = 150;
   let animationFrame;
 
   const updateFade = () => {
-    // Fade out existing pixels
     [leftCtx, rightCtx].forEach(ctx => {
       const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-      const pixels = imageData.data;
-      for (let i = 3; i < pixels.length; i += 4) {
-        pixels[i] *= fadeAmount;
+      const data = imageData.data;
+      for (let i = 3; i < data.length; i += 4) {
+        data[i] = Math.max(0, data[i] - 1);
       }
       ctx.putImageData(imageData, 0, 0);
     });
-
-    // Use the canvas as a mask for the grid
-    left.grid.style.opacity = Math.min(1, Math.max(...new Uint8Array(leftCtx.getImageData(0, 0, leftCtx.canvas.width, leftCtx.canvas.height).data.filter((_, i) => i % 4 === 3))) / 255);
-    right.grid.style.opacity = Math.min(1, Math.max(...new Uint8Array(rightCtx.getImageData(0, 0, rightCtx.canvas.width, rightCtx.canvas.height).data.filter((_, i) => i % 4 === 3))) / 255);
 
     animationFrame = requestAnimationFrame(updateFade);
   };
@@ -100,32 +98,34 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const scale = window.devicePixelRatio;
-
     // Left side
     if (e.clientX <= sideWidth) {
-      const x = e.clientX * scale;
-      const y = e.clientY * scale;
+      const rect = left.canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
       
-      const gradient = leftCtx.createRadialGradient(x, y, 0, x, y, spotlightSize * scale);
-      gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      leftCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      leftCtx.beginPath();
+      leftCtx.arc(x, y, spotlightSize / 2, 0, Math.PI * 2);
+      leftCtx.fill();
       
-      leftCtx.fillStyle = gradient;
-      leftCtx.fillRect(x - spotlightSize * scale, y - spotlightSize * scale, spotlightSize * 2 * scale, spotlightSize * 2 * scale);
+      left.grid.style.webkitMaskImage = `url(${left.canvas.toDataURL()})`;
+      left.grid.style.maskImage = `url(${left.canvas.toDataURL()})`;
     }
 
     // Right side
     if (e.clientX >= window.innerWidth - sideWidth) {
-      const x = (e.clientX - (window.innerWidth - sideWidth)) * scale;
-      const y = e.clientY * scale;
+      const rect = right.canvas.getBoundingClientRect();
+      const x = e.clientX - (window.innerWidth - sideWidth) - rect.left;
+      const y = e.clientY - rect.top;
       
-      const gradient = rightCtx.createRadialGradient(x, y, 0, x, y, spotlightSize * scale);
-      gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
-      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      rightCtx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      rightCtx.beginPath();
+      rightCtx.arc(x, y, spotlightSize / 2, 0, Math.PI * 2);
+      rightCtx.fill();
       
-      rightCtx.fillStyle = gradient;
-      rightCtx.fillRect(x - spotlightSize * scale, y - spotlightSize * scale, spotlightSize * 2 * scale, spotlightSize * 2 * scale);
+      right.grid.style.webkitMaskImage = `url(${right.canvas.toDataURL()})`;
+      right.grid.style.maskImage = `url(${right.canvas.toDataURL()})`;
     }
   });
 
