@@ -14,7 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.body.appendChild(leftContainer);
 
-  // Create fixed grid for left side with mask
+  // Create grid container for left side
+  const leftGridContainer = document.createElement('div');
+  leftGridContainer.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 2s ease;
+  `;
+  leftContainer.appendChild(leftGridContainer);
+
+  // Create actual grid for left side
   const leftGrid = document.createElement('div');
   leftGrid.style.cssText = `
     position: absolute;
@@ -26,16 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
       linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0;
-    mask-image: radial-gradient(circle closest-side at 0 0, black 0%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle closest-side at 0 0, black 0%, transparent 100%);
-    mask-size: 300px 300px;
-    -webkit-mask-size: 300px 300px;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    transition: opacity 2s ease;
   `;
-  leftContainer.appendChild(leftGrid);
+  leftGridContainer.appendChild(leftGrid);
 
   // Create right side elements
   const rightContainer = document.createElement('div');
@@ -50,7 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.body.appendChild(rightContainer);
 
-  // Create fixed grid for right side with mask
+  // Create grid container for right side
+  const rightGridContainer = document.createElement('div');
+  rightGridContainer.style.cssText = `
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 2s ease;
+  `;
+  rightContainer.appendChild(rightGridContainer);
+
+  // Create actual grid for right side
   const rightGrid = document.createElement('div');
   rightGrid.style.cssText = `
     position: absolute;
@@ -62,49 +80,40 @@ document.addEventListener('DOMContentLoaded', () => {
       linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
       linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
     background-size: 40px 40px;
-    opacity: 0;
-    mask-image: radial-gradient(circle closest-side at 0 0, black 0%, transparent 100%);
-    -webkit-mask-image: radial-gradient(circle closest-side at 0 0, black 0%, transparent 100%);
-    mask-size: 300px 300px;
-    -webkit-mask-size: 300px 300px;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
-    transition: opacity 2s ease;
   `;
-  rightContainer.appendChild(rightGrid);
+  rightGridContainer.appendChild(rightGrid);
 
-  // Update grid masks and opacity
+  // Update grid visibility and clipping
   document.addEventListener('mousemove', (e) => {
     const contentWidth = 640;
     const sideWidth = (window.innerWidth - contentWidth) / 2;
+    const spotlightSize = 150; // Diameter of the spotlight
     
     // Only show grids when window is wide enough
     if (window.innerWidth <= 800) {
-      leftGrid.style.opacity = '0';
-      rightGrid.style.opacity = '0';
+      leftGridContainer.style.opacity = '0';
+      rightGridContainer.style.opacity = '0';
       return;
     }
 
     // Left side
     if (e.clientX <= sideWidth) {
-      leftGrid.style.opacity = '1';
       const x = e.clientX;
       const y = e.clientY;
-      leftGrid.style.maskPosition = `${x}px ${y}px`;
-      leftGrid.style.webkitMaskPosition = `${x}px ${y}px`;
+      leftGridContainer.style.opacity = '1';
+      leftGrid.style.clipPath = `circle(${spotlightSize}px at ${x}px ${y}px)`;
     } else {
-      leftGrid.style.opacity = '0';
+      leftGridContainer.style.opacity = '0';
     }
 
     // Right side
     if (e.clientX >= window.innerWidth - sideWidth) {
-      rightGrid.style.opacity = '1';
       const x = e.clientX - (window.innerWidth - sideWidth);
       const y = e.clientY;
-      rightGrid.style.maskPosition = `${x}px ${y}px`;
-      rightGrid.style.webkitMaskPosition = `${x}px ${y}px`;
+      rightGridContainer.style.opacity = '1';
+      rightGrid.style.clipPath = `circle(${spotlightSize}px at ${x}px ${y}px)`;
     } else {
-      rightGrid.style.opacity = '0';
+      rightGridContainer.style.opacity = '0';
     }
   });
 
