@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
       background-size: 40px 40px;
+      background-position: ${isLeft ? '0 0' : '100% 0'};
     `;
 
     // Create canvas for mask
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.style.cssText = `
       position: absolute;
       top: 0;
-      left: 0;
+      ${isLeft ? 'left' : 'right'}: 0;
       width: 100%;
       height: 100%;
       opacity: 0;
