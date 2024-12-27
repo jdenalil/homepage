@@ -64,55 +64,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const leftCtx = initCanvas(left.canvas);
   const rightCtx = initCanvas(right.canvas);
 
-  // Keep track of object URLs to revoke them
-  let leftURL = null;
-  let rightURL = null;
-
-  // Function to update mask with new canvas content
-  const updateMask = (canvas, grid) => {
-    canvas.toBlob(blob => {
-      const url = URL.createObjectURL(blob);
-      grid.style.webkitMaskImage = `url(${url})`;
-      grid.style.maskImage = `url(${url})`;
-      
-      // Revoke old URL if it exists
-      if (canvas === left.canvas && leftURL) {
-        URL.revokeObjectURL(leftURL);
-      } else if (canvas === right.canvas && rightURL) {
-        URL.revokeObjectURL(rightURL);
-      }
-      
-      // Store new URL
-      if (canvas === left.canvas) {
-        leftURL = url;
-      } else {
-        rightURL = url;
-      }
-    });
-  };
-
   // Function to draw and update the fade effect
   const fadeAmount = 2;
   const spotlightSize = 150;
   let animationFrame;
 
   const updateFade = () => {
-    [leftCtx, rightCtx].forEach(ctx => {
+    [leftCtx, rightCtx].forEach((ctx, index) => {
       const imageData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
       const data = imageData.data;
-      let hasVisiblePixels = false;
       
       for (let i = 3; i < data.length; i += 4) {
         if (data[i] > 0) {
           data[i] = Math.max(0, data[i] - fadeAmount);
-          hasVisiblePixels = true;
         }
       }
       
-      if (hasVisiblePixels) {
-        ctx.putImageData(imageData, 0, 0);
-        updateMask(ctx.canvas, ctx === leftCtx ? left.grid : right.grid);
-      }
+      ctx.putImageData(imageData, 0, 0);
+      
+      const grid = index === 0 ? left.grid : right.grid;
+      const canvas = index === 0 ? left.canvas : right.canvas;
+      const dataUrl = canvas.toDataURL();
+      grid.style.webkitMaskImage = `url(${dataUrl})`;
+      grid.style.maskImage = `url(${dataUrl})`;
     });
 
     animationFrame = requestAnimationFrame(updateFade);
@@ -171,16 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
       left.grid.style.maskImage = 'none';
       right.grid.style.webkitMaskImage = 'none';
       right.grid.style.maskImage = 'none';
-      
-      // Revoke any existing URLs
-      if (leftURL) {
-        URL.revokeObjectURL(leftURL);
-        leftURL = null;
-      }
-      if (rightURL) {
-        URL.revokeObjectURL(rightURL);
-        rightURL = null;
-      }
     }
   };
 
@@ -190,7 +154,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // Cleanup
   return () => {
     cancelAnimationFrame(animationFrame);
-    if (leftURL) URL.revokeObjectURL(leftURL);
-    if (rightURL) URL.revokeObjectURL(rightURL);
   };
 });
