@@ -3,7 +3,7 @@ layout: post
 custom_js:
   - mesh_grid
 ---
-Goal: travel to 100 countries before the age of 30. 
+Goal: travel to 100 countries.
 1. 🇺🇸 USA (🏠)
 2. 🇨🇱 Chile (June 2015)
 3. 🇦🇷 Argentina (June 2015)
@@ -22,7 +22,7 @@ Goal: travel to 100 countries before the age of 30.
 16. 🇵🇹 Portugal (December 2024)
 17. 🇲🇦 Morocco (December 2024)
 18. 🇦🇩 Andorra (December 2024)
-19.   
+19. 🇨🇴 Columbia (July 2025)
 20.   
 21.   
 22.   
