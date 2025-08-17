@@ -10,10 +10,6 @@ custom_js:
 - [the magic of small teams](https://newsletter.posthog.com/p/the-magic-of-small-engineering-teams)
 - [cognitive load](https://minds.md/zakirullin/cognitive#long)
 
-### Functional Programming:
-- [combinatory programming](https://blog.zdsmith.com/series/combinatory-programming.html)
-- [a type of programming (book)](https://atypeofprogramming.com)
-
 ### Robotics:
 - [general robotics](https://substack.com/@generalrobots)
 - [amit's A* pages](https://theory.stanford.edu/~amitp/GameProgramming/index.html)
