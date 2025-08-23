@@ -1,7 +1,5 @@
 ---
 layout: post
-custom_js:
-  - mesh_grid
 ---
 
 ### Engineering Philosophy:
@@ -9,6 +7,7 @@ custom_js:
 - [-10x engineers](https://taylor.town/-10x)
 - [the magic of small teams](https://newsletter.posthog.com/p/the-magic-of-small-engineering-teams)
 - [cognitive load](https://minds.md/zakirullin/cognitive#long)
+- [an engineer's perspective on hiring](https://jyn.dev/an-engineers-perspective-on-hiring)
 
 ### Robotics:
 - [general robotics](https://substack.com/@generalrobots)

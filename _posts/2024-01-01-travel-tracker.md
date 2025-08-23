@@ -1,7 +1,5 @@
 ---
 layout: post
-custom_js:
-  - mesh_grid
 ---
 Goal: travel to 100 countries.
 1. 🇺🇸 USA (🏠)

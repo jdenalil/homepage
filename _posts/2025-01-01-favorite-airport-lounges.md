@@ -1,7 +1,5 @@
 ---
 layout: post
-custom_js:
-  - mesh_grid
 ---
 
 My favorite airport lounges
