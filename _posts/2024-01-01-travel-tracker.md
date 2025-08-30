@@ -21,7 +21,7 @@ Goal: travel to 100 countries.
 17. 🇲🇦 Morocco (December 2024)
 18. 🇦🇩 Andorra (December 2024)
 19. 🇨🇴 Columbia (July 2025)
-20.   
+20. ..where to next?
 21.   
 22.   
 23.   

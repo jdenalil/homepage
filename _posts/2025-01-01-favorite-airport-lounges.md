@@ -2,7 +2,7 @@
 layout: post
 ---
 
-My favorite airport lounges
+my favorite airport lounges
 
 1. Quantas - LHR 🇬🇧
 2. Capital One - DEN 🇺🇸
