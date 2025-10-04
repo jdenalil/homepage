@@ -9,7 +9,9 @@ layout: post
 - [cognitive load](https://minds.md/zakirullin/cognitive#long)
 - [an engineer's perspective on hiring](https://jyn.dev/an-engineers-perspective-on-hiring)
 - [design](https://paws.kettering.edu/~jhuggins/humor/design.html)
+- [do the simplest thing that could possibly work](https://www.seangoedecke.com/the-simplest-thing-that-could-possibly-work/)
 
 ### Robotics:
 - [general robotics](https://substack.com/@generalrobots)
 - [amit's A* pages](https://theory.stanford.edu/~amitp/GameProgramming/index.html)
+- [controls challenges](https://janismac.github.io/ControlChallenges/)
