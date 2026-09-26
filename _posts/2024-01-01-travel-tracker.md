@@ -22,7 +22,7 @@ Goal: travel to 100 countries.
 18. 🇦🇩 Andorra (December 2024)
 19. 🇨🇴 Columbia (July 2025)
 20. 🇻🇳 Vietnam (March 2026)
-21. ..where to next?
+21. 🇲🇽 Mexico (September 2026)
 22.   
 23.   
 24.   
