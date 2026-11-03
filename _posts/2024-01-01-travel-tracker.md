@@ -23,7 +23,7 @@ Goal: travel to 100 countries.
 19. 🇨🇴 Columbia (July 2025)
 20. 🇻🇳 Vietnam (March 2026)
 21. 🇲🇽 Mexico (September 2026)
-22.   
+22. 🇬🇹 Guatamala (November 2026)
 23.   
 24.   
 25.   
